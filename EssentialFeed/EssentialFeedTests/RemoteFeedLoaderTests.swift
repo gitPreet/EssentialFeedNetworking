@@ -20,7 +20,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url: url)
 
-        sut.load()
+        sut.load { _ in }
 
         XCTAssertEqual(client.requestedURLs, [url])
     }
@@ -29,8 +29,8 @@ class RemoteFeedLoaderTests: XCTestCase {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url: url)
 
-        sut.load()
-        sut.load()
+        sut.load { _ in }
+        sut.load { _ in }
 
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
@@ -42,9 +42,9 @@ class RemoteFeedLoaderTests: XCTestCase {
         sut.load {
             capturedErrors.append($0)
         }
-
         let clientError = NSError(domain: "Test", code: 0)
         client.complete(with: clientError)
+
         XCTAssertEqual(capturedErrors, [.connectivity])
     }
 
@@ -58,17 +58,20 @@ class RemoteFeedLoaderTests: XCTestCase {
 
     private class HTTPClientSpy: HTTPClient {
 
-        var requestedURLs = [URL]()
-        var completions = [(Error) -> Void]()
+        var messages = [(url: URL, completion: (Error) -> Void)]()
+
+        var requestedURLs: [URL] {
+                return messages.map { $0.url
+            }
+        }
 
         //Creating a spy since we do not want requestURL as a property in production code.
         func get(from url: URL, completion: @escaping (Error) -> Void) {
-            completions.append(completion)
-            self.requestedURLs.append(url)
+            messages.append((url, completion))
         }
 
         func complete(with error: Error, at index: Int = 0) {
-            completions[index](error)
+            messages[index].completion(error)
         }
     }
 }
