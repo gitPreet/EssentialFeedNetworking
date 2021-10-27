@@ -77,32 +77,19 @@ class RemoteFeedLoaderTests: XCTestCase {
     func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
         let (sut, client) = makeSUT()
 
-        let item1 = FeedItem(id: UUID(),
-                             description: nil,
-                             location: nil,
+        let item1 = makeItem(id: UUID(),
                              imageURL: URL(string: "https://a-url.com")!)
-        let item1Json = [
-            "id": item1.id.uuidString,
-            "image": item1.imageURL.absoluteString
-        ]
-
-        let item2 = FeedItem(id: UUID(),
+        let item2 = makeItem(id: UUID(),
                              description: "a description",
                              location: "a location",
                              imageURL: URL(string: "https://another-url.com")!)
 
-        let item2Json = [
-            "id": item2.id.uuidString,
-            "description": item2.description,
-            "location": item2.location,
-            "image": item2.imageURL.absoluteString
-        ]
-
         let itemsJSON = [
-            "items": [item1Json, item2Json]
+            "items": [item1.json, item2.json]
         ]
+        let items = [item1.model, item2.model]
 
-        expect(sut: sut, toCompleteWithResult: .success([item1, item2])) {
+        expect(sut: sut, toCompleteWithResult: .success(items)) {
             let json = try! JSONSerialization.data(withJSONObject: itemsJSON, options: .fragmentsAllowed)
             client.complete(withStatusCode: 200, data: json)
         }
@@ -114,6 +101,28 @@ class RemoteFeedLoaderTests: XCTestCase {
         let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(url: url, client: client)
         return (sut, client)
+    }
+
+    func makeItem(id: UUID,
+                  description: String? = nil,
+                  location: String? = nil,
+                  imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
+        let item = FeedItem(id: id,
+                             description: description,
+                             location: location,
+                             imageURL: imageURL)
+        let json = [
+            "id": id.uuidString,
+            "description": description,
+            "location": location,
+            "image": imageURL.absoluteString
+        ].reduce(into: [String: Any]()) { acc, e in
+            if let value = e.value {
+                acc[e.key] = value
+            }
+        }
+
+        return (item, json)
     }
 
     private class HTTPClientSpy: HTTPClient {
