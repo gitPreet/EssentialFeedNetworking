@@ -7,11 +7,16 @@
 
 import Foundation
 
-enum LoadFeedResult {
+public enum LoadFeedResult<T: Swift.Error> {
     case success([FeedItem])
-    case error(Error)
+    case failure(T)
 }
 
+extension LoadFeedResult: Equatable where T: Equatable {}
+
 protocol FeedLoader {
-    func load(completion: (LoadFeedResult) -> ())
+
+    associatedtype Error: Swift.Error
+
+    func load(completion: (LoadFeedResult<Error>) -> ())
 }
