@@ -67,6 +67,19 @@ class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertNotNil(resultError(data: nil, response: nil, error: nil))
     }
 
+    func test_getFromURL_failsOnAllInvalidRepresentationCases() {
+
+        XCTAssertNotNil(resultError(data: nil, response: nonHTTPURLResponse(), error: nil))
+        XCTAssertNotNil(resultError(data: nil, response: anyHTTPURLResponse(), error: nil))
+        XCTAssertNotNil(resultError(data: anyData(), response: nil, error: nil))
+        XCTAssertNotNil(resultError(data: anyData(), response: nil, error: anyNSError()))
+        XCTAssertNotNil(resultError(data: nil, response: nonHTTPURLResponse(), error: anyNSError()))
+        XCTAssertNotNil(resultError(data: nil, response: anyHTTPURLResponse(), error: anyNSError()))
+        XCTAssertNotNil(resultError(data: anyData(), response: nonHTTPURLResponse(), error: anyNSError()))
+        XCTAssertNotNil(resultError(data: anyData(), response: anyHTTPURLResponse(), error: anyNSError()))
+        XCTAssertNotNil(resultError(data: anyData(), response: nonHTTPURLResponse(), error: nil))
+    }
+
     //MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> URLSessionHTTPClient {
@@ -77,6 +90,22 @@ class URLSessionHTTPClientTests: XCTestCase {
 
     private func anyURL() -> URL {
         return URL(string: "https://a-url.com")!
+    }
+
+    private func anyData() -> Data {
+        return Data("any data".utf8)
+    }
+
+    private func anyNSError() -> NSError {
+        return NSError(domain: "any error", code: 0, userInfo: nil)
+    }
+
+    private func anyHTTPURLResponse() -> HTTPURLResponse? {
+        return HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
+    }
+
+    private func nonHTTPURLResponse() -> URLResponse? {
+        return URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 1, textEncodingName: nil)
     }
 
     private func resultError(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> Error? {
