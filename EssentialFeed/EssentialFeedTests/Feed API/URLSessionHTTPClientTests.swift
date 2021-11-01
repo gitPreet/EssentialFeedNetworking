@@ -77,6 +77,10 @@ class URLSessionHTTPClientTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 
+    private func makeSUT() -> URLSessionHTTPClient {
+        return URLSessionHTTPClient()
+    }
+
     private class URLProtocolStub: URLProtocol {
 
         private static var stub: Stub?
