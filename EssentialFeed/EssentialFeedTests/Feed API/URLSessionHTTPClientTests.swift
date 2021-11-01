@@ -8,27 +8,6 @@
 import XCTest
 import EssentialFeed
 
-class URLSessionHTTPClient {
-
-    let session: URLSession
-
-    init(session: URLSession = .shared)  {
-        self.session = session
-    }
-
-    private struct UnexpectedValuesRepresentation: Error {}
-
-    func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {
-        session.dataTask(with: url) { _, _, error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.failure(UnexpectedValuesRepresentation()))
-            }
-        }.resume()
-    }
-}
-
 class URLSessionHTTPClientTests: XCTestCase {
 
     override class func setUp() {
@@ -80,9 +59,33 @@ class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertNotNil(resultError(data: anyData(), response: nonHTTPURLResponse(), error: nil))
     }
 
+    func test_getFromURL_succeedsOnHTTPURLResponseWithData() {
+        let data = anyData()
+        let httpURLResponse = anyHTTPURLResponse()
+        let url = anyURL()
+
+        URLProtocolStub.stub(data: data, response: httpURLResponse, error: nil)
+
+        let exp = expectation(description: "Wait for response")
+        makeSUT().get(from: url) { result in
+            switch result {
+            case .success(let receivedData, let receivedResponse):
+                XCTAssertEqual(receivedData, data)
+                XCTAssertEqual(receivedResponse.statusCode, httpURLResponse?.statusCode)
+                XCTAssertEqual(receivedResponse.url, httpURLResponse?.url)
+
+            default:
+                XCTFail("Expected success. Got \(result) instead")
+            }
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1.0)
+    }
+
     //MARK: - Helpers
 
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> URLSessionHTTPClient {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> HTTPClient {
         let sut = URLSessionHTTPClient()
         trackForMemoryLeak(instance: sut, file: file, line: line)
         return sut
