@@ -17,20 +17,18 @@ class CacheFeedUseCaseTests: XCTestCase {
     }
 
     func test_save_requestsCacheDeletion() {
-        let items = [uniqueItem(), uniqueItem()]
         let (sut, store) = makeSUT()
 
-        sut.save(items: items) { _ in }
+        sut.save(items: uniqueItems().models) { _ in }
 
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed])
     }
 
     func test_save_doesNotRequestCacheInsertionOnDeletionError() {
-        let items = [uniqueItem(), uniqueItem()]
         let (sut, store) = makeSUT()
         let deletionError = anyNSError()
 
-        sut.save(items: items) { _ in }
+        sut.save(items: uniqueItems().models) { _ in }
         store.completeDeletion(with: deletionError)
 
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed])
@@ -38,18 +36,15 @@ class CacheFeedUseCaseTests: XCTestCase {
 
     func test_save_requestsNewCacheInsertionWithTimestampOnSuccessfulDeletion() {
         let timestamp = Date()
-        let items = [uniqueItem(), uniqueItem()]
-        let localItems = items.map {
-            return LocalFeedItem(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL)
-        }
+
         let (sut, store) = makeSUT {
             return timestamp
         }
 
-        sut.save(items: items) { _ in }
+        sut.save(items: uniqueItems().models) { _ in }
         store.completeDeletionSuccessfully()
 
-        XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed, .insert(localItems, timestamp)])
+        XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed, .insert(items.local, timestamp)])
     }
 
     func test_save_failsOnDeletionError() {
@@ -127,6 +122,14 @@ class CacheFeedUseCaseTests: XCTestCase {
                         description: "any desc",
                         location: "any loc",
                         imageURL: anyURL())
+    }
+
+    private func uniqueItems() -> (models: [FeedItem], local: [LocalFeedItem]) {
+        let models = [uniqueItem(), uniqueItem()]
+        let local = models.map {
+            return LocalFeedItem(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL)
+        }
+        return (models, local)
     }
 
     private func anyURL() -> URL {
