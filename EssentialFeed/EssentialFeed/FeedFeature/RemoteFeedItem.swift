@@ -12,4 +12,11 @@ internal struct RemoteFeedItem: Decodable {
     internal let description: String?
     internal let location: String?
     internal let imageURL: URL
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case description
+        case location
+        case imageURL = "image"
+    }
 }
