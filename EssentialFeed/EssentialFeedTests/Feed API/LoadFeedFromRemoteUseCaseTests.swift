@@ -125,11 +125,11 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
     func makeItem(id: UUID,
                   description: String? = nil,
                   location: String? = nil,
-                  imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
-        let item = FeedItem(id: id,
+                  imageURL: URL) -> (model: FeedImage, json: [String: Any]) {
+        let item = FeedImage(id: id,
                              description: description,
                              location: location,
-                             imageURL: imageURL)
+                             url: imageURL)
         let json = [
             "id": id.uuidString,
             "description": description,
