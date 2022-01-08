@@ -46,22 +46,26 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(receivedError as NSError?, retrievalError)
     }
 
-//    func test_load_deliversNoImagesOnEmptyCache() {
-//        let (sut, store) = makeSUT()
-//
-//        let exp = expectation(description: "wait for load completion")
-//
-//        var receivedImages: [FeedImage]?
-//        sut.load { (result) in
-//            receivedImages = error
-//            exp.fulfill()
-//        }
-//
-//        store.completeRetrieval(with: anyNSError())
-//        wait(for: [exp], timeout: 1.0)
-//
-//        XCTAssertEqual(receivedError as NSError?, retrievalError)
-//    }
+    func test_load_deliversNoImagesOnEmptyCache() {
+        let (sut, store) = makeSUT()
+
+        let exp = expectation(description: "wait for load completion")
+
+        var receivedImages: [FeedImage]?
+        sut.load { (result) in
+            switch result {
+            case .success(let images):
+                receivedImages = images
+            default: XCTFail("Expected success. Got \(result) instead.")
+            }
+            exp.fulfill()
+        }
+
+        store.completeRetrievalWithEmptyCache()
+        wait(for: [exp], timeout: 1.0)
+
+        XCTAssertEqual(receivedImages, [])
+    }
 
     //MARK: - Helpers
 
