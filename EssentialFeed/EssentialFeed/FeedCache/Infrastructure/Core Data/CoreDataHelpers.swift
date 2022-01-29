@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-private extension NSManagedObjectModel {
+internal extension NSManagedObjectModel {
 
     static func with(name: String, in bundle: Bundle) -> NSManagedObjectModel? {
         return bundle
@@ -17,7 +17,7 @@ private extension NSManagedObjectModel {
     }
 }
 
-private extension NSPersistentContainer {
+internal extension NSPersistentContainer {
 
     enum LoadingError: Swift.Error {
         case modelNotFound
