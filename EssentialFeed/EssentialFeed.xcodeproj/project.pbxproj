@@ -55,6 +55,7 @@
 		29E896EA272512F20038D259 /* FeedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E896E9272512F20038D259 /* FeedImage.swift */; };
 		29E896EC2725147A0038D259 /* FeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E896EB2725147A0038D259 /* FeedLoader.swift */; };
 		29E896EF272516510038D259 /* LoadFeedFromRemoteUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E896EE272516510038D259 /* LoadFeedFromRemoteUseCaseTests.swift */; };
+		29EF0BAA27B532BA00D9D1B4 /* FeedViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EF0BA927B532BA00D9D1B4 /* FeedViewControllerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,6 +136,7 @@
 		29E896E9272512F20038D259 /* FeedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImage.swift; sourceTree = "<group>"; };
 		29E896EB2725147A0038D259 /* FeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoader.swift; sourceTree = "<group>"; };
 		29E896EE272516510038D259 /* LoadFeedFromRemoteUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadFeedFromRemoteUseCaseTests.swift; sourceTree = "<group>"; };
+		29EF0BA927B532BA00D9D1B4 /* FeedViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,6 +245,7 @@
 			isa = PBXGroup;
 			children = (
 				2929013127B3926F00DC0D8A /* EssentialFeediOSTests.swift */,
+				29EF0BA927B532BA00D9D1B4 /* FeedViewControllerTests.swift */,
 			);
 			path = EssentialFeediOSTests;
 			sourceTree = "<group>";
@@ -623,6 +626,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29EF0BAA27B532BA00D9D1B4 /* FeedViewControllerTests.swift in Sources */,
 				2929013227B3926F00DC0D8A /* EssentialFeediOSTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
