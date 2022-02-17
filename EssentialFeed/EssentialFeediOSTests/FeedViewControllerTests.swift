@@ -127,7 +127,7 @@ extension FeedViewController {
     }
 
     func isShowingLoadingIndicator() -> Bool {
-        return refreshControl?.isRefreshing
+        return refreshControl?.isRefreshing == true
     }
 }
 
