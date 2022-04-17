@@ -20,14 +20,23 @@ final class FeedRefreshViewController: NSObject, FeedLoadingView {
         self.viewModel = viewModel
     } */
 
+    /* De coupling this coontroller from the presenter as it needs it only to call the load feed. use closure instead.
+
     private let presenter: FeedPresenter
 
     init(presenter: FeedPresenter) {
         self.presenter = presenter
+    } */
+
+    private let loadFeed: () -> Void
+
+    init(loadFeed: @escaping () -> Void) {
+        self.loadFeed = loadFeed
     }
 
     @objc func refresh() {
-        presenter.loadFeed()
+        //presenter.loadFeed()
+        loadFeed()
     }
 
     func display(_ viewModel: FeedLoadingViewModel) {
