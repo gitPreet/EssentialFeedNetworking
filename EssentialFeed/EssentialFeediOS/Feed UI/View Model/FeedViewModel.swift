@@ -5,6 +5,7 @@
 //  Created by Preetham Baliga on 15/04/22.
 //
 
+/*
 import Foundation
 import EssentialFeed
 
@@ -33,3 +34,4 @@ final class FeedViewModel {
         })
     }
 }
+ */

@@ -16,7 +16,8 @@ protocol FeedViewProtocol {
     func display(feed: [FeedImage])
 } */
 
-protocol FeedLoadingView: class {
+
+protocol FeedLoadingView {
     func display(isLoading: Bool)
 }
 
