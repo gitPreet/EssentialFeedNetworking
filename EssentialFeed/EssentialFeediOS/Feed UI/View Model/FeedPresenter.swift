@@ -16,11 +16,11 @@ protocol FeedViewProtocol {
     func display(feed: [FeedImage])
 } */
 
-protocol FeedLoadingView {
+protocol FeedLoadingView: class {
     func display(isLoading: Bool)
 }
 
-protocol FeedView: class {
+protocol FeedView {
     func display(feed: [FeedImage])
 }
 
@@ -36,8 +36,8 @@ final class FeedPresenter {
 //    var onLoadingStateChange: Observer<Bool>?
 //    var onFeedLoad: Observer<[FeedImage]>?
 
-    var loadingView: FeedLoadingView?
-    weak var feedView: FeedView?
+    weak var loadingView: FeedLoadingView?
+    var feedView: FeedView?
 
     func loadFeed() {
         //onLoadingStateChange?(true)
