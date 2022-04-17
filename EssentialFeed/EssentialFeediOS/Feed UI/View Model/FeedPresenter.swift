@@ -36,7 +36,7 @@ final class FeedPresenter {
 //    var onLoadingStateChange: Observer<Bool>?
 //    var onFeedLoad: Observer<[FeedImage]>?
 
-    weak var loadingView: FeedLoadingView?
+    var loadingView: FeedLoadingView?
     var feedView: FeedView?
 
     func loadFeed() {
