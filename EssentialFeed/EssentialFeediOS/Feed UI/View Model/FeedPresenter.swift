@@ -16,15 +16,23 @@ protocol FeedViewProtocol {
     func display(feed: [FeedImage])
 } */
 
+struct FeedLoadingViewModel {
+    let isLoading: Bool
+}
 
 protocol FeedLoadingView {
-    func display(isLoading: Bool)
+    func display(_ viewModel: FeedLoadingViewModel)
+}
+
+struct FeedViewModel {
+    let feed: [FeedImage]
 }
 
 protocol FeedView {
-    func display(feed: [FeedImage])
+    func display(_ viewModel: FeedViewModel)
 }
 
+// Presenters translate model values into view data.
 final class FeedPresenter {
 
     typealias Observer<T> = (T) -> Void
@@ -42,17 +50,24 @@ final class FeedPresenter {
 
     func loadFeed() {
         //onLoadingStateChange?(true)
-        loadingView?.display(isLoading: true)
+        loadingView?.display(FeedLoadingViewModel(isLoading: true))
         feedLoader.load(completion: { [weak self] result in
             switch result {
             case .success(let feedImage):
-                self?.feedView?.display(feed: feedImage)
+                self?.feedView?.display(FeedViewModel(feed: feedImage))
 
             case .failure: break
             }
             //self?.onLoadingStateChange?(false)
-            self?.loadingView?.display(isLoading: false)
+            self?.loadingView?.display(FeedLoadingViewModel(isLoading: false))
         })
     }
 }
 
+/*
+
+ In MVP, a view model is also called View data or presentable model.
+ It only holds the data necessary or view rendering. It has no behaviour.
+
+ This is different from MVVM. where view model has dependencies and behaviour.
+ */
