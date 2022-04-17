@@ -35,32 +35,20 @@ protocol FeedView {
 // Presenters translate model values into view data.
 final class FeedPresenter {
 
-    typealias Observer<T> = (T) -> Void
-    private let feedLoader: FeedLoader
-
-    init(feedLoader: FeedLoader) {
-        self.feedLoader = feedLoader
-    }
-
-//    var onLoadingStateChange: Observer<Bool>?
-//    var onFeedLoad: Observer<[FeedImage]>?
-
     var loadingView: FeedLoadingView?
     var feedView: FeedView?
 
-    func loadFeed() {
-        //onLoadingStateChange?(true)
+    func didStartLoadingFeed() {
         loadingView?.display(FeedLoadingViewModel(isLoading: true))
-        feedLoader.load(completion: { [weak self] result in
-            switch result {
-            case .success(let feedImage):
-                self?.feedView?.display(FeedViewModel(feed: feedImage))
+    }
 
-            case .failure: break
-            }
-            //self?.onLoadingStateChange?(false)
-            self?.loadingView?.display(FeedLoadingViewModel(isLoading: false))
-        })
+    func didFinishLoadingFeed(with feed: [FeedImage]) {
+        feedView?.display(FeedViewModel(feed: feed))
+        loadingView?.display(FeedLoadingViewModel(isLoading: false))
+    }
+
+    func didFinishLoadingFeed(with error: Error) {
+        loadingView?.display(FeedLoadingViewModel(isLoading: false))
     }
 }
 
